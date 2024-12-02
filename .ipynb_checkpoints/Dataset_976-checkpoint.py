@@ -7,7 +7,7 @@ from torch.utils.data import Dataset
 import torchaudio.transforms as T
 
 class AudioDatasetBatch:
-    def __init__(self, lossless_dir, lossy_dir, segment_duration=0.1, batch_size=500):
+    def __init__(self, lossless_dir, lossy_dir, batch_size=500):
         """
         Initializes the batch-based dataset processor.
         """
@@ -19,7 +19,6 @@ class AudioDatasetBatch:
         )
 
         assert len(self.lossless_files) == len(self.lossy_files), "Mismatch in number of lossless and lossy files!"
-        self.segment_duration = segment_duration
         self.batch_size = batch_size
 
     def process_pair(self, lossless_path, lossy_path):
@@ -50,8 +49,8 @@ class AudioDatasetBatch:
         """
         waveform, sample_rate = torchaudio.load(file_path)
 
-        # Calculate segment size dynamically
-        segment_size = int(sample_rate * self.segment_duration)
+        # Calculate dynamic segment size
+        segment_size = int((sample_rate / 1000) * 2)
 
         # Split waveform into fixed-size segments
         segments = [
@@ -107,8 +106,8 @@ lossless_dir = '/home/j597s263/scratch/j597s263/Datasets/Audio/Lossless/'
 lossy_dir = '/home/j597s263/scratch/j597s263/Datasets/Audio/Lossy/'
 output_dir = '/home/j597s263/scratch/j597s263/Datasets/Audio/Batches/'
 
-# Create the batch processor with 0.1-second segments
-dataset_batch = AudioDatasetBatch(lossless_dir, lossy_dir, segment_duration=0.1, batch_size=500)
+# Create the batch processor
+dataset_batch = AudioDatasetBatch(lossless_dir, lossy_dir, batch_size=500)
 
 # Process and save batches
 dataset_batch.process_and_save_batches(output_dir)
