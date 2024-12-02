@@ -108,7 +108,7 @@ lossy_dir = '/home/j597s263/scratch/j597s263/Datasets/Audio/Lossy/'
 output_dir = '/home/j597s263/scratch/j597s263/Datasets/Audio/Batches/'
 
 # Create the batch processor with 0.1-second segments
-dataset_batch = AudioDatasetBatch(lossless_dir, lossy_dir, segment_duration=0.1, batch_size=500)
+dataset_batch = AudioDatasetBatch(lossless_dir, lossy_dir, segment_duration=0.1, batch_size=100)
 
 # Process and save batches
 dataset_batch.process_and_save_batches(output_dir)
