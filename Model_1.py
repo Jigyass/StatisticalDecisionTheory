@@ -1,7 +1,7 @@
 import os
 import torch
 import torchaudio
-import random
+import numpy as np
 import torchaudio.transforms as T
 
 class AudioDataset:
@@ -47,9 +47,9 @@ class AudioDataset:
             print(f"Skipping {lossless_path} and {lossy_path} due to unequal segments.")
             return []
 
-        # Randomly pad lossy segments to match lossless size
+        # Evenly distribute zeros in lossy segments to match lossless size
         padded_lossy_segments = [
-            self.random_pad(lossy_segment, lossless_segment.shape[1])
+            self.even_distribute_pad(lossy_segment, lossless_segment.shape[1])
             for lossy_segment, lossless_segment in zip(lossy_segments, lossless_segments)
         ]
 
@@ -72,20 +72,27 @@ class AudioDataset:
         ]
         return segments, segment_size
 
-    def random_pad(self, segment, target_size):
+    def even_distribute_pad(self, segment, target_size):
         """
-        Randomly pads the input segment to match the target size.
+        Evenly distributes zeros between elements to match the target size.
+        Operates directly in PyTorch without any NumPy conversions.
         """
         current_size = segment.shape[1]
         if current_size >= target_size:
             return segment  # No padding needed
 
-        # Calculate padding size
-        padding_size = target_size - current_size
-        front_pad = random.randint(0, padding_size)
-        back_pad = padding_size - front_pad
+        # Create an empty tensor with target size initialized to zero
+        padded_segment = torch.zeros((segment.shape[0], target_size), dtype=segment.dtype, device=segment.device)
 
-        return torch.nn.functional.pad(segment, (front_pad, back_pad))
+        # Calculate indices to place original values
+        step = target_size / current_size
+        indices = (torch.arange(current_size) * step).long()
+
+        # Assign original values to the calculated indices
+        padded_segment[:, indices] = segment
+
+        return padded_segment
+
 
     def __len__(self):
         return len(self.data)
@@ -108,14 +115,11 @@ dataset.process_and_add()
 # Check the size of the dataset
 print(f"Total number of segment pairs: {len(dataset)}")
 
-
 import torch
 import torch.nn as nn
 from torch.nn import TransformerEncoder, TransformerEncoderLayer
+import matplotlib.pyplot as plt
 
-import torch
-import torch.nn as nn
-from torch.nn import TransformerEncoder, TransformerEncoderLayer
 
 class AudioEnhancer(nn.Module):
     def __init__(self, num_transformer_layers=2, num_heads=8, cnn_filters=[32, 64, 128, 256]):
@@ -210,9 +214,12 @@ class DummyFeatureExtractor(nn.Module):
         return self.features(x)
 
 
-# Training loop
-def train_model(model, dataloader, optimizer, loss_fn, num_epochs=10, device='cuda:0'):
+import matplotlib.pyplot as plt
+
+def train_model(model, dataloader, optimizer, loss_fn, num_epochs=10, device='cuda:0', plot_path='/home/j597s263/scratch/j597s263/StatisticalDecisionTheory/training_loss.png'):
     model.train()
+    losses = []  # To store loss values for plotting
+
     for epoch in range(num_epochs):
         total_loss = 0
         for lossy, lossless in dataloader:
@@ -232,12 +239,27 @@ def train_model(model, dataloader, optimizer, loss_fn, num_epochs=10, device='cu
             
             total_loss += loss.item()
         
-        print(f"Epoch {epoch+1}/{num_epochs}, Loss: {total_loss / len(dataloader):.4f}")        
+        # Average loss for the epoch
+        avg_loss = total_loss / len(dataloader)
+        losses.append(avg_loss)
+        print(f"Epoch {epoch+1}/{num_epochs}, Loss: {avg_loss:.4f}")
 
+    # Save the loss curve as a plot
+    plt.figure(figsize=(10, 6))
+    plt.plot(range(1, num_epochs + 1), losses, marker='o', label='Training Loss')
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+    plt.title('Training Loss Curve')
+    plt.grid(True)
+    plt.legend()
+    plt.savefig(plot_path)  # Save the plot to a file
+    print(f"Training loss plot saved to {plot_path}")
+
+    return losses
 
 # DataLoader
 from torch.utils.data import DataLoader
-audio_dataloader = DataLoader(dataset, batch_size=64, shuffle=True)
+audio_dataloader = DataLoader(dataset, batch_size=64, shuffle=False)
 
 # Model and training setup
 device = 'cuda'
@@ -249,10 +271,10 @@ feature_extractor = DummyFeatureExtractor().to(device)
 loss_fn = PerceptualLoss(feature_extractor).to(device)
 
 # Train the model
-train_model(model, audio_dataloader, optimizer, loss_fn, num_epochs=10, device=device)
+train_model(model, audio_dataloader, optimizer, loss_fn, num_epochs=20, device=device)
 
 # Path to save the entire model
-model_save_path = '/home/j597s263/scratch/j597s263/Models/Lad_0.01.mod'
+model_save_path = '/home/j597s263/scratch/j597s263/Models/Lad_1.mod'
 
 # Save the entire model
 torch.save(model, model_save_path)

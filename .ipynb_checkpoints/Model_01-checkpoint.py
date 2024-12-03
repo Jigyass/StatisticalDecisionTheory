@@ -100,7 +100,7 @@ lossless_dir = "/home/j597s263/scratch/j597s263/Datasets/Audio/Lossless/temp/"
 lossy_dir = "/home/j597s263/scratch/j597s263/Datasets/Audio/Lossy/temp/"
 
 # Create the dataset processor
-dataset = AudioDataset(lossless_dir, lossy_dir, segment_duration=0.1)
+dataset = AudioDataset(lossless_dir, lossy_dir, segment_duration=0.01)
 
 # Process songs one by one
 dataset.process_and_add()
@@ -108,10 +108,6 @@ dataset.process_and_add()
 # Check the size of the dataset
 print(f"Total number of segment pairs: {len(dataset)}")
 
-
-import torch
-import torch.nn as nn
-from torch.nn import TransformerEncoder, TransformerEncoderLayer
 
 import torch
 import torch.nn as nn
@@ -132,18 +128,9 @@ class AudioEnhancer(nn.Module):
             nn.Conv1d(cnn_filters[2], cnn_filters[3], kernel_size=3, padding=1),
             nn.ReLU()
         )
-        
-        # Transformer
-        self.transformer = TransformerEncoder(
-            TransformerEncoderLayer(
-                d_model=cnn_filters[-1], 
-                nhead=num_heads, 
-                dim_feedforward=512, 
-                activation='relu', 
-                batch_first=True
-            ),
-            num_layers=num_transformer_layers
-        )
+        self.transformer = TransformerEncoder(TransformerEncoderLayer(d_model=cnn_filters[-1], nhead=num_heads, dim_feedforward=512, activation='relu', batch_first=True  # Ensure batch-first format
+                                                                     ),num_layers=num_transformer_layers)
+
         
         # CNN Decoder
         self.decoder = nn.Sequential(
@@ -158,21 +145,20 @@ class AudioEnhancer(nn.Module):
         )
     
     def forward(self, x):
-        # Input: [batch_size, 2, 4800]
+        # Input: [batch_size, 2, 480]
         
         # CNN Encoder
-        x = self.encoder(x)  # Shape: [batch_size, cnn_filters[-1], 4800]
+        x = self.encoder(x)  # Shape: [batch_size, cnn_filters[-1], 480]
         
         # Permute for Transformer
-        x = x.permute(0, 2, 1)  # Shape: [batch_size, 4800, cnn_filters[-1]]
-        x = self.transformer(x)  # Shape: [batch_size, 4800, cnn_filters[-1]]
-        x = x.permute(0, 2, 1)  # Shape: [batch_size, cnn_filters[-1], 4800]
+        x = x.permute(0, 2, 1)  # Shape: [batch_size, 480, cnn_filters[-1]]
+        x = self.transformer(x)  # Shape: [batch_size, 480, cnn_filters[-1]]
+        x = x.permute(0, 2, 1)  # Shape: [batch_size, cnn_filters[-1], 480]
         
         # CNN Decoder
-        x = self.decoder(x)  # Shape: [batch_size, 2, 4800]
+        x = self.decoder(x)  # Shape: [batch_size, 2, 480]
         
         return x
-
 
 
 class PerceptualLoss(nn.Module):

@@ -1,0 +1,17 @@
+Job 58919 running on g031
+Processed 10/36 songs...
+Processed 20/36 songs...
+Processed 30/36 songs...
+Dataset created with 675015 valid segment pairs.
+Total number of segment pairs: 675015
+Epoch 1/10, Loss: 0.0365
+Epoch 2/10, Loss: 0.0331
+Epoch 3/10, Loss: 0.0319
+Epoch 4/10, Loss: 0.0312
+Epoch 5/10, Loss: 0.0308
+Epoch 6/10, Loss: 0.0305
+Epoch 7/10, Loss: 0.0303
+Epoch 8/10, Loss: 0.0301
+Epoch 9/10, Loss: 0.0300
+Epoch 10/10, Loss: 0.0299
+Entire model saved to /home/j597s263/scratch/j597s263/Models/Lad_0.01.mod.
