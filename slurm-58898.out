@@ -1,3 +1,0 @@
-Job 58898 running on g031
-/var/spool/slurm/tmp/job58898/slurm_script: line 21: 59944 Killed                  python3 Dataset.py
-slurmstepd: error: Detected 1 oom_kill event in StepId=58898.batch. Some of the step tasks have been OOM Killed.
