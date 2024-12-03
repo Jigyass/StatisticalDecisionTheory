@@ -18,7 +18,7 @@ source Audio/bin/activate
 echo "Job ${SLURM_JOB_ID} running on ${HOSTNAME}"
 
 # Run your Python script
-python3 Dataset.py
+python3 Model_01.py
 
 # Optional: Deactivate virtual environment (cleanup)
 deactivate
