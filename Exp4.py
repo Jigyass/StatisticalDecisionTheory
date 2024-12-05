@@ -258,7 +258,7 @@ loss_fn = PerceptualLoss(feature_extractor).to(device)
 train_model(model, dataloader, optimizer, loss_fn, num_epochs=20, device=device)
 
 # Path to save the entire model
-model_save_path = '/home/j597s263/scratch/j597s263/Models/Exp_4.mod'
+model_save_path = '/home/j597s263/scratch/j597s263/Models/Audio/Exp_4.mod'
 
 # Save the entire model
 torch.save(model, model_save_path)

@@ -2,9 +2,9 @@
 
 #SBATCH -p gpu                    # Specify the GPU partition
 #SBATCH --gres=gpu:a100:1         # Request 1 A100 GPU
-#SBATCH -c 8                      # Request 4 CPU cores
-#SBATCH --mem=48GB                # Request 8GB memory
-#SBATCH -t 10:20:00               # 5 hour time limit
+#SBATCH -c 16                     # Request 16 CPU cores
+#SBATCH --mem=80GB                # Request 80GB memory
+#SBATCH -t 30:20:00               # 30 hour time limit
 #SBATCH -J Lossless_dataset       # Name of the job
 #SBATCH -o slurm-%j.out           # Save output to slurm-<job_id>.out
 
