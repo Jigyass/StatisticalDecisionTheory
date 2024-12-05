@@ -248,7 +248,7 @@ def train_model(model, dataloader, optimizer, loss_fn, num_epochs=10, device='cu
 # Model and training setup
 device = 'cuda'
 model = AudioEnhancer(num_transformer_layers=2, num_heads=8).to(device)
-optimizer = torch.optim.Adam(model.parameters(), lr=1e-2)
+optimizer = torch.optim.Adam(model.parameters(), lr=5e-5)
 
 # Loss function with dummy feature extractor
 feature_extractor = DummyFeatureExtractor().to(device)
