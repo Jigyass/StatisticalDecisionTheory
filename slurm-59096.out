@@ -1,1 +1,38 @@
 Job 59096 running on g031
+Processed 10/113 songs...
+Processed 20/113 songs...
+Processed 30/113 songs...
+Processed 40/113 songs...
+Processed 50/113 songs...
+Processed 60/113 songs...
+Processed 70/113 songs...
+Processed 80/113 songs...
+Processed 90/113 songs...
+Processed 100/113 songs...
+Processed 110/113 songs...
+Dataset created with 246733 valid segment pairs.
+Total segment pairs: 246733
+Lossy segment shape: torch.Size([2, 4400]), Lossless segment shape: torch.Size([2, 4400])
+Batch lossy shape: torch.Size([128, 2, 4400]), Batch lossless shape: torch.Size([128, 2, 4400])
+Epoch 1/20, Loss: 1.1305
+Epoch 2/20, Loss: 1.1311
+Epoch 3/20, Loss: 1.1311
+Epoch 4/20, Loss: 1.1311
+Epoch 5/20, Loss: 1.1311
+Epoch 6/20, Loss: 1.1311
+Epoch 7/20, Loss: 1.1311
+Epoch 8/20, Loss: 1.1311
+Epoch 9/20, Loss: 1.1311
+Epoch 10/20, Loss: 1.1311
+Epoch 11/20, Loss: 1.1311
+Epoch 12/20, Loss: 1.1311
+Epoch 13/20, Loss: 1.1311
+Epoch 14/20, Loss: 1.1311
+Epoch 15/20, Loss: 1.1311
+Epoch 16/20, Loss: 1.1311
+Epoch 17/20, Loss: 1.1311
+Epoch 18/20, Loss: 1.1311
+Epoch 19/20, Loss: 1.1311
+Epoch 20/20, Loss: 1.1311
+Training loss plot saved to /home/j597s263/scratch/j597s263/StatisticalDecisionTheory/Exp_4.png
+Entire model saved to /home/j597s263/scratch/j597s263/Models/Audio/Exp_4.mod.
