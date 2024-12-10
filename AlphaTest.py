@@ -191,7 +191,7 @@ def train_model(model, dataloader, optimizer, loss_fn, num_epochs=10):
 # In[7]:
 
 
-audio = DataLoader(dataset, batch_size=8, shuffle=True)
+audio = DataLoader(dataset, batch_size=12, shuffle=True)
 
 
 # In[8]:
@@ -227,7 +227,7 @@ loss_fn = PerceptualLoss(feature_extractor).to(device)
 
 
 # Train the model
-train_model(model, audio, optimizer, loss_fn, num_epochs=1)
+train_model(model, audio, optimizer, loss_fn, num_epochs=20)
 
 
 # In[ ]:
